@@ -15,6 +15,18 @@
 #
 def triangle(a, b, c)
   # WRITE THIS CODE
+  [a, b, c].permutation do |sides|
+    raise TriangleError unless sides[0] + sides[1] > sides[2]
+  end
+
+  case [a, b, c].uniq.size
+    when 1
+      :equilateral
+    when 2
+      :isosceles
+    when 3
+      :scalene
+  end
 end
 
 # Error class used in part 2.  No need to change this code.
