@@ -29,8 +29,39 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 #
 # Your goal is to write the score method.
 
+def calc_count(dice, number, threshold)
+  (dice.count(number) >= threshold) ? dice.count(number) - threshold : dice.count(number)
+end
+
 def score(dice)
-  # You need to write this method
+  points = 0
+  threshold = 3
+  fives_score = 50
+  ones_score = 100
+  three_number_sets_score = 100
+  three_ones_score = 1000
+
+  # A set of three ones is 1000 points
+  points += three_ones_score if dice.count(1) >= threshold
+
+  # A set of three numbers (other than ones) is worth 100 times the number.
+  iterated = []
+  dice.each do |item|
+    if item != 1
+      if iterated.count(item) == 0 && dice.count(item) >= threshold
+        points += item * three_number_sets_score
+        iterated << item
+      end
+    end
+  end
+
+  # A one (that is not part of a set of three) is worth 100 points.
+  points += calc_count(dice, 1, threshold) * ones_score
+
+  # A five (that is not part of a set of three) is worth 50 points.
+  points += calc_count(dice, 5, threshold) * fives_score
+
+  points
 end
 
 class AboutScoringProject < Neo::Koan
@@ -64,6 +95,10 @@ class AboutScoringProject < Neo::Koan
     assert_equal 400, score([4,4,4])
     assert_equal 500, score([5,5,5])
     assert_equal 600, score([6,6,6])
+    assert_equal 700, score([7,7,7])
+    assert_equal 800, score([8,8,8])
+    assert_equal 900, score([9,9,9])
+    assert_equal 2200, score([22,22,22])
   end
 
   def test_score_of_mixed_is_sum
