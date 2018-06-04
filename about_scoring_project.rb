@@ -40,6 +40,7 @@ def score(dice)
   ones_score = 100
   three_number_sets_score = 100
   three_ones_score = 1000
+  excluded_numbers_from_sets = [1]
 
   # A set of three ones is 1000 points
   points += three_ones_score if dice.count(1) >= threshold
@@ -47,7 +48,7 @@ def score(dice)
   # A set of three numbers (other than ones) is worth 100 times the number.
   iterated = []
   dice.each do |item|
-    if item != 1
+    if excluded_numbers_from_sets.count(item) == 0
       if iterated.count(item) == 0 && dice.count(item) >= threshold
         points += item * three_number_sets_score
         iterated << item
